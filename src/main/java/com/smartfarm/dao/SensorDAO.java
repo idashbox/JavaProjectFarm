@@ -1,61 +1,60 @@
 package com.smartfarm.dao;
 
 import com.smartfarm.db.DatabaseConnection;
-import com.smartfarm.db.model.Animal;
+import com.smartfarm.db.model.Sensor;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnimalDAO {
+public class SensorDAO {
+    private static SensorDAO instance;
 
-    private static AnimalDAO instance;
+    private SensorDAO() {}
 
-    private AnimalDAO() {}
-
-    public static synchronized AnimalDAO getInstance() {
+    public static synchronized SensorDAO getInstance() {
         if (instance == null) {
-            instance = new AnimalDAO();
+            instance = new SensorDAO();
         }
         return instance;
     }
 
-    public void addAnimal(String type, String name, int ownerId) {
-        String sql = "INSERT INTO Animals (type, name, owner_id) VALUES (?, ?, ?)";
+    public void addSensor(String type, String location, int farmId) {
+        String sql = "INSERT INTO Sensors (type, location, farm_id) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, type);
-            stmt.setString(2, name);
-            stmt.setInt(3, ownerId);
+            stmt.setString(2, location);
+            stmt.setInt(3, farmId);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public List<Animal> getAnimals() {
-        List<Animal> animals = new ArrayList<>();
-        String sql = "SELECT * FROM Animals";
+    public List<Sensor> getSensors() {
+        List<Sensor> sensors = new ArrayList<>();
+        String sql = "SELECT * FROM Sensors";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                animals.add(mapResultSetToAnimal(rs));
+                sensors.add(mapResultSetToSensor(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return animals;
+        return sensors;
     }
 
-    public Animal getAnimalById(int id) {
-        String sql = "SELECT * FROM Animals WHERE id = ?";
+    public Sensor getSensorById(int id) {
+        String sql = "SELECT * FROM Sensors WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return mapResultSetToAnimal(rs);
+                    return mapResultSetToSensor(rs);
                 }
             }
         } catch (SQLException e) {
@@ -64,26 +63,40 @@ public class AnimalDAO {
         return null;
     }
 
-    public List<Animal> getAnimalsByOwnerId(int ownerId) {
-        List<Animal> animals = new ArrayList<>();
-        String sql = "SELECT * FROM Animals WHERE owner_id = ?";
+    public List<Sensor> getSensorsByFarmId(int farmId) {
+        List<Sensor> sensors = new ArrayList<>();
+        String sql = "SELECT * FROM Sensors WHERE farm_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, ownerId);
+            stmt.setInt(1, farmId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    animals.add(mapResultSetToAnimal(rs));
+                    sensors.add(mapResultSetToSensor(rs));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return animals;
+        return sensors;
     }
 
 
-    public void deleteAnimalById(int id) {
-        String sql = "DELETE FROM Animals WHERE id = ?";
+    public void updateSensor(Sensor sensor) {
+        String sql = "UPDATE Sensors SET type = ?, location = ?, farm_id = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, sensor.getType());
+            stmt.setString(2, sensor.getLocation());
+            stmt.setInt(3, sensor.getUserId());
+            stmt.setInt(4, sensor.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteSensor(int id) {
+        String sql = "DELETE FROM Sensors WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -93,37 +106,12 @@ public class AnimalDAO {
         }
     }
 
-    public void updateAnimal(Animal animal) {
-        String sql = "UPDATE Animals SET type = ?, name = ?, owner_id = ? WHERE id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, animal.getType());
-            stmt.setString(2, animal.getName());
-            stmt.setInt(3, animal.getOwnerId());
-            stmt.setInt(4, animal.getId());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void deleteAnimal(int id) {
-        String sql = "DELETE FROM Animals WHERE id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Animal mapResultSetToAnimal(ResultSet rs) throws SQLException {
-        return new Animal(
+    private Sensor mapResultSetToSensor(ResultSet rs) throws SQLException {
+        return new Sensor(
                 rs.getInt("id"),
                 rs.getString("type"),
-                rs.getString("name"),
-                rs.getInt("owner_id")
+                rs.getString("location"),
+                rs.getInt("farm_id")
         );
     }
 }

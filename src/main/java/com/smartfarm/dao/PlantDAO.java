@@ -1,31 +1,30 @@
 package com.smartfarm.dao;
 
 import com.smartfarm.db.DatabaseConnection;
-import com.smartfarm.db.model.Animal;
+import com.smartfarm.db.model.Plant;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnimalDAO {
+public class PlantDAO {
+    private static PlantDAO instance;
 
-    private static AnimalDAO instance;
+    private PlantDAO() {}
 
-    private AnimalDAO() {}
-
-    public static synchronized AnimalDAO getInstance() {
+    public static synchronized PlantDAO getInstance() {
         if (instance == null) {
-            instance = new AnimalDAO();
+            instance = new PlantDAO();
         }
         return instance;
     }
 
-    public void addAnimal(String type, String name, int ownerId) {
-        String sql = "INSERT INTO Animals (type, name, owner_id) VALUES (?, ?, ?)";
+    public void addPlant(String type, Date plantedDate, int ownerId) {
+        String sql = "INSERT INTO Plants (type, planted_date, owner_id) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, type);
-            stmt.setString(2, name);
+            stmt.setDate(2, plantedDate);
             stmt.setInt(3, ownerId);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -33,29 +32,29 @@ public class AnimalDAO {
         }
     }
 
-    public List<Animal> getAnimals() {
-        List<Animal> animals = new ArrayList<>();
-        String sql = "SELECT * FROM Animals";
+    public List<Plant> getPlants() {
+        List<Plant> plants = new ArrayList<>();
+        String sql = "SELECT * FROM Plants";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                animals.add(mapResultSetToAnimal(rs));
+                plants.add(mapResultSetToPlant(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return animals;
+        return plants;
     }
 
-    public Animal getAnimalById(int id) {
-        String sql = "SELECT * FROM Animals WHERE id = ?";
+    public Plant getPlantById(int id) {
+        String sql = "SELECT * FROM Plants WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return mapResultSetToAnimal(rs);
+                    return mapResultSetToPlant(rs);
                 }
             }
         } catch (SQLException e) {
@@ -64,26 +63,40 @@ public class AnimalDAO {
         return null;
     }
 
-    public List<Animal> getAnimalsByOwnerId(int ownerId) {
-        List<Animal> animals = new ArrayList<>();
-        String sql = "SELECT * FROM Animals WHERE owner_id = ?";
+    public List<Plant> getPlantByOwnerId(int ownerId) {
+        List<Plant> plants = new ArrayList<>();
+        String sql = "SELECT * FROM Plants WHERE owner_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, ownerId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    animals.add(mapResultSetToAnimal(rs));
+                    plants.add(mapResultSetToPlant(rs));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return animals;
+        return plants;
     }
 
 
-    public void deleteAnimalById(int id) {
-        String sql = "DELETE FROM Animals WHERE id = ?";
+    public void updatePlant(Plant plant) {
+        String sql = "UPDATE Plants SET type = ?, planted_date = ?, owner_id = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, plant.getType());
+            stmt.setDate(2, plant.getPlantedDate());
+            stmt.setInt(3, plant.getOwnerId());
+            stmt.setInt(4, plant.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deletePlant(int id) {
+        String sql = "DELETE FROM Plants WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -93,36 +106,11 @@ public class AnimalDAO {
         }
     }
 
-    public void updateAnimal(Animal animal) {
-        String sql = "UPDATE Animals SET type = ?, name = ?, owner_id = ? WHERE id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, animal.getType());
-            stmt.setString(2, animal.getName());
-            stmt.setInt(3, animal.getOwnerId());
-            stmt.setInt(4, animal.getId());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void deleteAnimal(int id) {
-        String sql = "DELETE FROM Animals WHERE id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Animal mapResultSetToAnimal(ResultSet rs) throws SQLException {
-        return new Animal(
+    private Plant mapResultSetToPlant(ResultSet rs) throws SQLException {
+        return new Plant(
                 rs.getInt("id"),
                 rs.getString("type"),
-                rs.getString("name"),
+                rs.getDate("planted_date"),
                 rs.getInt("owner_id")
         );
     }

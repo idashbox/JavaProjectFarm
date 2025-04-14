@@ -11,9 +11,9 @@ public class Main {
 //        UserDAO.addUser("Петя", "petya@example.com");
 //        UserDAO.printUsers();
 
-        AnimalDAO.addAnimal("Кошка", "Мурка", 1);
-        AnimalDAO.addAnimal("Собака", "Шарик", 2);
-        AnimalDAO.printAnimals();
+//        AnimalDAO.addAnimal("Кошка", "Мурка", 1);
+//        AnimalDAO.addAnimal("Собака", "Шарик", 2);
+//        AnimalDAO.printAnimals();
 
 
     }

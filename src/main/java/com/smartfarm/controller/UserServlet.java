@@ -1,13 +1,12 @@
-package com.smartfarm.servlets;
+package com.smartfarm.controller;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import com.smartfarm.dao.UserDAO;
-import com.smartfarm.model.User;
+import com.smartfarm.db.model.User;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -19,13 +18,13 @@ public class UserServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        List<User> users = UserDAO.getUsers();
-
-        System.out.println("Пользователи получены: " + users);
-        String json = new Gson().toJson(users);
-
-        PrintWriter out = response.getWriter();
-        out.print(json);
-        out.flush();
+//        List<User> users = UserDAO.getUsers();
+//
+//        System.out.println("Пользователи получены: " + users);
+//        String json = new Gson().toJson(users);
+//
+//        PrintWriter out = response.getWriter();
+//        out.print(json);
+//        out.flush();
     }
 }

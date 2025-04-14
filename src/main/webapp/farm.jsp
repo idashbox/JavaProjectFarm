@@ -1,56 +1,102 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.smartfarm.model.User" %>
-<%@ page import="com.smartfarm.model.Animal" %>
+<%@ page import="com.smartfarm.db.model.*" %>
+
 <html>
 <head>
-    <title>Ферма - Пользователи и Животные</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid black; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-    </style>
+    <title>My Farm Dashboard</title>
 </head>
 <body>
-<h2>Список пользователей</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Имя</th>
-        <th>Email</th>
-    </tr>
-    <%
-        List<User> users = (List<User>) request.getAttribute("users");
-        for (User user : users) {
-    %>
-    <tr>
-        <td><%= user.getId() %></td>
-        <td><%= user.getName() %></td>
-        <td><%= user.getEmail() %></td>
-    </tr>
-    <% } %>
-</table>
+<h1>Добро пожаловать на вашу ферму!</h1>
 
-<h2>Список животных</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Вид</th>
-        <th>Имя</th>
-        <th>ID владельца</th>
-    </tr>
+<!-- ==== ЖИВОТНЫЕ ==== -->
+<h2>Ваши животные</h2>
+<ul>
     <%
         List<Animal> animals = (List<Animal>) request.getAttribute("animals");
         for (Animal animal : animals) {
     %>
-    <tr>
-        <td><%= animal.getId() %></td>
-        <td><%= animal.getType() %></td>
-        <td><%= animal.getName() %></td>
-        <td><%= animal.getOwnerId() %></td>
-    </tr>
-    <% } %>
-</table>
+    <li>
+        <%= animal.getType() %> - <%= animal.getName() %>
+        <form method="post" action="my_farm" style="display:inline;">
+            <input type="hidden" name="_method" value="DELETE" />
+            <input type="hidden" name="resource" value="animal" />
+            <input type="hidden" name="id" value="<%= animal.getId() %>" />
+            <button type="submit">Удалить</button>
+        </form>
+    </li>
+    <%
+        }
+    %>
+</ul>
+
+<h3>Добавить животное</h3>
+<form method="post" action="my_farm">
+    <input type="hidden" name="resource" value="animal" />
+    Тип: <input type="text" name="type" required />
+    Имя: <input type="text" name="name" required />
+    <button type="submit">Добавить</button>
+</form>
+
+
+<!-- ==== РАСТЕНИЯ ==== -->
+<h2>Ваши растения</h2>
+<ul>
+    <%
+        List<Plant> plants = (List<Plant>) request.getAttribute("plants");
+        for (Plant plant : plants) {
+    %>
+    <li>
+        <%= plant.getType() %> - Посажено: <%= plant.getPlantedDate() %>
+        <form method="post" action="my_farm" style="display:inline;">
+            <input type="hidden" name="_method" value="DELETE" />
+            <input type="hidden" name="resource" value="plant" />
+            <input type="hidden" name="id" value="<%= plant.getId() %>" />
+            <button type="submit">Удалить</button>
+        </form>
+    </li>
+    <%
+        }
+    %>
+</ul>
+
+<h3>Добавить растение</h3>
+<form method="post" action="my_farm">
+    <input type="hidden" name="resource" value="plant" />
+    Тип: <input type="text" name="type" required />
+    Дата посадки: <input type="date" name="plantedDate" required />
+    <button type="submit">Добавить</button>
+</form>
+
+
+<!-- ==== СЕНСОРЫ ==== -->
+<h2>Ваши сенсоры</h2>
+<ul>
+    <%
+        List<Sensor> sensors = (List<Sensor>) request.getAttribute("sensors");
+        for (Sensor sensor : sensors) {
+    %>
+    <li>
+        <%= sensor.getType() %> - Расположение: <%= sensor.getLocation() %>
+        <form method="post" action="my_farm" style="display:inline;">
+            <input type="hidden" name="_method" value="DELETE" />
+            <input type="hidden" name="resource" value="sensor" />
+            <input type="hidden" name="id" value="<%= sensor.getId() %>" />
+            <button type="submit">Удалить</button>
+        </form>
+    </li>
+    <%
+        }
+    %>
+</ul>
+
+<h3>Добавить сенсор</h3>
+<form method="post" action="my_farm">
+    <input type="hidden" name="resource" value="sensor" />
+    Тип: <input type="text" name="type" required />
+    Расположение: <input type="text" name="location" required />
+    <button type="submit">Добавить</button>
+</form>
+
 </body>
 </html>

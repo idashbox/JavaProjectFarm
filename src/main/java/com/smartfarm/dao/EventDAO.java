@@ -1,59 +1,60 @@
 package com.smartfarm.dao;
 
 import com.smartfarm.db.DatabaseConnection;
-import com.smartfarm.db.model.User;
+import com.smartfarm.db.model.Event;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAO {
-    private static UserDAO instance;
+public class EventDAO {
+    private static EventDAO instance;
 
-    private UserDAO() {}
+    private EventDAO() {}
 
-    public static synchronized UserDAO getInstance() {
+    public static synchronized EventDAO getInstance() {
         if (instance == null) {
-            instance = new UserDAO();
+            instance = new EventDAO();
         }
         return instance;
     }
 
-    public void addUser(String name, String email) {
-        String sql = "INSERT INTO Users (name, email) VALUES (?, ?)";
+    public void addEvent(String eventType, String description, Timestamp eventDate) {
+        String sql = "INSERT INTO Events (event_type, description, event_date) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, name);
-            stmt.setString(2, email);
+            stmt.setString(1, eventType);
+            stmt.setString(2, description);
+            stmt.setTimestamp(3, eventDate);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public List<User> getUsers() {
-        List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM Users";
+    public List<Event> getEvents() {
+        List<Event> events = new ArrayList<>();
+        String sql = "SELECT * FROM Events";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                users.add(mapResultSetToUser(rs));
+                events.add(mapResultSetToEvent(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return users;
+        return events;
     }
 
-    public User getUserById(int id) {
-        String sql = "SELECT * FROM Users WHERE id = ?";
+    public Event getEventById(int id) {
+        String sql = "SELECT * FROM Events WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return mapResultSetToUser(rs);
+                    return mapResultSetToEvent(rs);
                 }
             }
         } catch (SQLException e) {
@@ -62,21 +63,22 @@ public class UserDAO {
         return null;
     }
 
-    public void updateUser(User user) {
-        String sql = "UPDATE Users SET name = ?, email = ? WHERE id = ?";
+    public void updateEvent(Event event) {
+        String sql = "UPDATE Events SET event_type = ?, description = ?, event_date = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getEmail());
-            stmt.setInt(3, user.getId());
+            stmt.setString(1, event.getEventType());
+            stmt.setString(2, event.getDescription());
+            stmt.setTimestamp(3, event.getEventDate());
+            stmt.setInt(4, event.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void deleteUser(int id) {
-        String sql = "DELETE FROM Users WHERE id = ?";
+    public void deleteEvent(int id) {
+        String sql = "DELETE FROM Events WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -86,11 +88,12 @@ public class UserDAO {
         }
     }
 
-    private User mapResultSetToUser(ResultSet rs) throws SQLException {
-        return new User(
+    private Event mapResultSetToEvent(ResultSet rs) throws SQLException {
+        return new Event(
                 rs.getInt("id"),
-                rs.getString("name"),
-                rs.getString("email")
+                rs.getString("event_type"),
+                rs.getString("description"),
+                rs.getTimestamp("event_date")
         );
     }
 }

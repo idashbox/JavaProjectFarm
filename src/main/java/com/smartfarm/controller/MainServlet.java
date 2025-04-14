@@ -1,7 +1,6 @@
-package com.smartfarm.servlets;
+package com.smartfarm.controller;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +14,6 @@ public class MainServlet extends HttpServlet {
         String name = "Admin";
         req.setAttribute("name", name);
 
-        getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
+        getServletContext().getRequestDispatcher("/farm.jsp").forward(req, resp);
     }
 }

@@ -105,7 +105,7 @@ General error: "org.h2.mvstore.MVStoreException: The file is locked: C:/Users/Hu
 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:230)
 	at com.smartfarm.db.DatabaseConnection.getConnection(DatabaseConnection.java:16)
 	at com.smartfarm.dao.UserDAO.getUsers(UserDAO.java:31)
-	at com.smartfarm.servlets.FarmServlet.doGet(FarmServlet.java:19)
+	at com.smartfarm.controller.FarmServlet.doGet(FarmServlet.java:19)
 	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
 	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
