@@ -13,10 +13,6 @@ public class Sensor {
         this.farmId = farmId;
     }
 
-    public Sensor(String type, String location, int farmId) {
-        this(0, type, location, farmId);
-    }
-
     public int getId() {
         return id;
     }

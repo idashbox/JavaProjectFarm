@@ -14,10 +14,6 @@ public class Animal {
         this.ownerId = ownerId;
     }
 
-    public Animal(String type, String name, int ownerId) {
-        this(0, type, name, ownerId);
-    }
-
     public int getId() {
         return id;
     }

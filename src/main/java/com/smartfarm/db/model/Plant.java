@@ -15,10 +15,6 @@ public class Plant {
         this.ownerId = ownerId;
     }
 
-    public Plant(String type, Date plantedDate, int ownerId) {
-        this(0, type, plantedDate, ownerId);
-    }
-
     public int getId() {
         return id;
     }

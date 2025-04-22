@@ -1,7 +1,6 @@
 package com.smartfarm.service;
 
 import com.smartfarm.dao.PlantDAO;
-import com.smartfarm.db.model.Animal;
 import com.smartfarm.db.model.Plant;
 
 import java.sql.Date;

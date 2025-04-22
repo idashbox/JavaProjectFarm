@@ -39,18 +39,10 @@ public class DatabaseInitializer {
                     "farm_id INT" +
                     ");";
 
-            String createEventsTable = "CREATE TABLE IF NOT EXISTS Events (" +
-                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
-                    "event_type VARCHAR(50) NOT NULL, " +
-                    "description TEXT, " +
-                    "event_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
-                    ");";
-
             statement.execute(createUsersTable);
             statement.execute(createAnimalsTable);
             statement.execute(createPlantsTable);
             statement.execute(createSensorsTable);
-            statement.execute(createEventsTable);
 
             System.out.println("Таблицы успешно созданы или уже существуют.");
         } catch (SQLException e) {

@@ -11,10 +11,6 @@ public class User {
         this.email = email;
     }
 
-    public User(String name, String email) {
-        this(0, name, email);
-    }
-
     public int getId() {
         return id;
     }
