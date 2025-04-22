@@ -18,11 +18,16 @@
   <servlet>
     <servlet-name>FarmServlet</servlet-name>
     <servlet-class>com.smartfarm.controller.FarmServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
     <servlet-name>FarmServlet</servlet-name>
     <url-pattern>/farm</url-pattern>
   </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>farm</welcome-file>
+  </welcome-file-list>
 
 </web-app>

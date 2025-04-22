@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
-@WebServlet("/my_farm")
 public class FarmServlet extends HttpServlet {
 
     private final PlantService plantService = PlantService.getInstance();
@@ -83,7 +82,7 @@ public class FarmServlet extends HttpServlet {
             return;
         }
 
-        response.sendRedirect("/Java_Project_war_exploded/my_farm");
+        response.sendRedirect("/Java_Project_war_exploded/farm");
     }
 
     @Override
@@ -120,6 +119,6 @@ public class FarmServlet extends HttpServlet {
                 break;
         }
 
-        response.sendRedirect("/Java_Project_war_exploded/my_farm");
+        response.sendRedirect("/Java_Project_war_exploded/farm");
     }
 }

@@ -27,7 +27,7 @@ public class AuthServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("userId", user.getId());
                 session.setAttribute("userName", user.getName());
-                response.sendRedirect("my_farm");
+                response.sendRedirect("farm");
                 return;
             }
         }
